@@ -75,7 +75,7 @@ proc validationFailure {shortreason args} {
 	puts "Usage: [createURL]<hashMethod>/<hashValue>"
 	puts "       Supply X-Cache-URL header with the origin URL to cache, it will be fetched and cached if the contents are not already available"
 	puts ""
-	puts "Example: curl --header 'X-Cache-URL: http://www.rkeene.org/' http://hashcache.rkeene.org/sha1/dfc00e1a9ad78225527028db113d72c0ec8c12f8"
+	puts "Example: curl --fail --header 'X-Cache-URL: http://www.rkeene.org/' http://hashcache.rkeene.org/sha1/dfc00e1a9ad78225527028db113d72c0ec8c12f8"
 
 	if {[llength $args] != 0} {
 		puts ""
