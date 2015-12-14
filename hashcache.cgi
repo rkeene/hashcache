@@ -126,7 +126,7 @@ proc validateHash {filename command value} {
 proc cacheRemoteURL {url cachefile hashCommand hashValue} {
 	set retval false
 
-	set tmpfile "${cachefile}-[expr rand()]"
+	set tmpfile "${cachefile}-[expr rand()]-[clock clicks]"
 
 	file mkdir [file dirname $tmpfile]
 
