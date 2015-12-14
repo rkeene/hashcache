@@ -26,6 +26,45 @@ proc openssl {command filename} {
 	return $output
 }
 
+proc createURL {} {
+	foreach hostEntry [list HTTP_HOST SERVER_NAME] {
+		if {[info exists ::env($hostEntry)]} {
+			set host $::env($hostEntry)
+
+			break
+		}
+	}
+
+	if {![info exists host]} {
+		return ""
+	}
+
+	if {[info exists ::env(HTTPS)] && $::env(HTTPS) == "on"} {
+		set scheme "https"
+	} else {
+		set scheme "http"
+	}
+
+	if {[info exists ::env(SERVER_PORT)]} {
+		switch -- $scheme {
+			"http" { set defaultPort 80 }
+			"https" { set defaultPort 443 }
+		}
+
+		if {$::env(SERVER_PORT) != $defaultPort} {
+			set addPort $::env(SERVER_PORT)
+		}
+	}
+
+	if {[info exists addPort]} {
+		set host "${host}:${addPort}"
+	}
+
+	set url "${scheme}://${host}/"
+
+	return $url
+}
+
 proc validationFailure {shortreason args} {
 	puts "Content-type: text/plain"
 
@@ -33,8 +72,15 @@ proc validationFailure {shortreason args} {
 
 	puts ""
 
-	foreach arg $args {
-		puts "$arg"
+	puts "Usage: [createURL]<hashMethod>/<hashValue>"
+	puts "       Supply X-Cache-URL header with the origin URL to cache, it will be fetched and cached if the contents are not already available"
+
+	if {[llength $args] != 0} {
+		puts ""
+		puts "Error:"
+		foreach arg $args {
+			puts "\t$arg"
+		}
 	}
 
 	exit 0
