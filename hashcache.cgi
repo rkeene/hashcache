@@ -141,7 +141,7 @@ proc cacheRemoteURL {url cachefile hashCommand hashValue} {
 	fconfigure $outChan -translation binary
 
 	if {[catch {
-		exec curl -sSkL $url >@ $outChan
+		exec curl -sSkL -- $url >@ $outChan
 	} err]} {
 		set result "500"
 		set resultString $err
@@ -212,6 +212,14 @@ if {![info exists ::env(HTTP_X_CACHE_URL)]} {
 }
 
 set originURL $::env(HTTP_X_CACHE_URL)
+
+switch -glob -- $originURL {
+	"http://*" - "https://*" - "ftp://*" {}
+	default {
+		validationFailure "Invalid URL Scheme" \
+			 "We only support HTTP, HTTPS, and FTP transports for origin URLs.  The URL must begin with one of: http://, https://, ftp://"
+	}
+}
 
 set cacheResult [cacheRemoteURL $originURL $targetFile $hashCommand $hashValue]
 set cacheResultStatus [lindex $cacheResult 0]
