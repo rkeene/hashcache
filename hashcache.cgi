@@ -114,7 +114,7 @@ proc sendUserFile {filename} {
 proc validateHash {filename command value} {
 	lappend command $filename
 
-	set chkValue [uplevel #0 $command]
+	set chkValue [string tolower [uplevel #0 $command]]
 
 	if {$chkValue == $value} {
 		return true
@@ -190,9 +190,13 @@ if {![dict exists $hashInfo $hashMethod]} {
 set hashLength [dict get $hashInfo $hashMethod length]
 set hashCommand [dict get $hashInfo $hashMethod command]
 
-if {[string length $hashValue] != [expr {$hashLength * 2}]} {
+if {
+	[string length $hashValue] != [expr {$hashLength * 2}]
+		|| 
+	![regexp {^[0-9a-f]*$} $hashValue]
+} {
 	validationFailure "Hash Value Specified" \
-		"Invalid hash value specified -- wrong length.  The hash value supplied is expected to be a hex string of [expr {$hashLength * 2}] characters 0-9A-F" \
+		"Invalid hash value specified -- wrong length.  The hash value supplied is expected to be a hex string of [expr {$hashLength * 2}] characters 0-9a-f" \
 		"Got: \"${hashValue}\""
 }
 
