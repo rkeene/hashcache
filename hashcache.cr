@@ -5,9 +5,9 @@ require "openssl/digest"
 require "http/client"
 require "file.cr"
 
-/*
- * Crystal 0.10 has a bug in the OpenSSL::Digest.update method, rewrite it here.
- */
+#
+# Crystal 0.10 has a bug in the OpenSSL::Digest.update method, rewrite it here.
+#
 module OpenSSL
   module DigestBase
     def update(io : IO)
