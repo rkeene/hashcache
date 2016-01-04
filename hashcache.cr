@@ -3,6 +3,7 @@
 require "openssl"
 require "openssl/digest"
 require "http/client"
+require "http/server"
 require "file.cr"
 
 #
@@ -25,7 +26,6 @@ private def getHashInformation(hashMethod : String) : Hash
 		hashData = OpenSSL::Digest.new(hashMethod)
 	rescue
 		raise "Unacceptable hashing algorithm: #{hashMethod}"
-		
 	end
 
 	returnValue = {
@@ -221,9 +221,17 @@ private def cgiInterface
 end
 
 private def httpInterface
-	puts "No HTTP interface yet"
+	puts "HTTP Server Interface is not implemented."
 
 	exit 1
+
+	server = HTTP::Server.new("0.0.0.0", 8089) { |request|
+		puts "Path = #{request.path}"
+
+		HTTP::Response.ok("text/plain", "Hello World!")
+	}
+
+	server.listen
 end
 
 if ENV["GATEWAY_INTERFACE"]?
