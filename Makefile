@@ -3,7 +3,7 @@ WEBDIR = /web/customers/hashcache.rkeene.org
 all: hashcache
 
 hashcache: hashcache.cr
-	crystal build --release --link-flags '-static' -o hashcache hashcache.cr
+	crystal build --release -o hashcache hashcache.cr
 	strip hashcache
 
 install:
