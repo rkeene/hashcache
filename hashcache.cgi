@@ -96,8 +96,10 @@ proc sendUserFile {filename} {
 	}
 
 	fconfigure $inFd -translation binary
+	file lstat $filename fileStat
 
 	puts "Content-type: application/octet-stream"
+	puts "Content-length: $fileStat(size)"
 	puts ""
 
 	flush stdout
